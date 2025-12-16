@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment Assistance | UNISA Academic Assist</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #7209b7;
+            --accent: #f72585;
+            --success: #4cc9f0;
+            --light: #f8f9fa;
+            --dark: #1a1a2e;
+            --darker: #16213e;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --border: rgba(255, 255, 255, 0.1);
+            --shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            --shadow-hover: 0 15px 40px rgba(0, 0, 0, 0.2);
+            --radius: 10px;
+            --radius-lg: 16px;
+            --transition: all 0.25s ease;
+            --unisa-red: #E31B23;
+            --unisa-gold: #FFD700;
+            --assignment-gradient: linear-gradient(135deg, #4361ee, #3a0ca3);
+            --unisa-bg: linear-gradient(135deg, #0c1a3c, #1a1a2e);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--unisa-bg);
+            background-attachment: fixed;
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: #fff;
+            min-height: 100vh;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .inner-header {
+            text-align: center;
+            padding: 80px 0 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .inner-header::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background: radial-gradient(circle, rgba(67, 97, 238, 0.05) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .inner-header h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 3.2rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+            background: linear-gradient(45deg, #fff 30%, var(--unisa-gold) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .inner-header p {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* UNISA Badge */
+        .unisa-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(227, 27, 35, 0.15);
+            border: 2px solid rgba(227, 27, 35, 0.3);
+            color: var(--unisa-red);
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            margin-top: 20px;
+            font-size: 1.1rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Flash Messages */
+        .flash-messages {
+            max-width: 900px;
+            margin: 0 auto 30px;
+        }
+
+        .alert {
+            padding: 15px 20px;
+            border-radius: var(--radius);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideIn 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .alert-success {
+            background: rgba(40, 167, 69, 0.15);
+            border-color: rgba(40, 167, 69, 0.3);
+            color: #4cc9f0;
+        }
+
+        .alert-danger {
+            background: rgba(220, 53, 69, 0.15);
+            border-color: rgba(220, 53, 69, 0.3);
+            color: #f72585;
+        }
+
+        .alert-warning {
+            background: rgba(255, 193, 7, 0.15);
+            border-color: rgba(255, 193, 7, 0.3);
+            color: #ffc107;
+        }
+
+        .alert-info {
+            background: rgba(23, 162, 184, 0.15);
+            border-color: rgba(23, 162, 184, 0.3);
+            color: #4cc9f0;
+        }
+
+        /* Main Content Layout */
+        .service-details {
+            padding-bottom: 80px;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 900px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Cards */
+        .info-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .info-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .info-card:hover::after {
+            transform: scaleX(1);
+        }
+
+        .info-card h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .info-card h2 i {
+            color: var(--primary);
+            font-size: 1.6rem;
+        }
+
+        /* Service List */
+        .service-list {
+            list-style: none;
+        }
+
+        .service-list li {
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: var(--transition);
+        }
+
+        .service-list li:hover {
+            padding-left: 10px;
+        }
+
+        .service-list li:last-child {
+            border-bottom: none;
+        }
+
+        .service-list li i {
+            color: var(--success);
+            font-size: 1.1rem;
+            width: 24px;
+        }
+
+        /* Price Card */
+        .price-card {
+            background: linear-gradient(145deg, rgba(67, 97, 238, 0.1), rgba(114, 9, 183, 0.05));
+            border: 1px solid rgba(67, 97, 238, 0.2);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            text-align: center;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .price-card:hover {
+            background: linear-gradient(145deg, rgba(67, 97, 238, 0.15), rgba(114, 9, 183, 0.1));
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(67, 97, 238, 0.15);
+        }
+
+        .price-card h2 i {
+            color: var(--accent);
+        }
+
+        .price-badge {
+            position: absolute;
+            top: -15px;
+            right: -15px;
+            background: var(--assignment-gradient);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            box-shadow: 0 10px 25px rgba(67, 97, 238, 0.3);
+            z-index: 2;
+            animation: floatBadge 3s ease-in-out infinite;
+        }
+
+        @keyframes floatBadge {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(5deg); }
+        }
+
+        .price-tag {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin: 25px 0;
+            position: relative;
+            display: inline-block;
+        }
+
+        .price-tag span {
+            background: linear-gradient(135deg, var(--primary), var(--success));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+            z-index: 1;
+        }
+
+        .price-tag::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: -10%;
+            width: 120%;
+            height: 20px;
+            background: rgba(67, 97, 238, 0.1);
+            transform: translateY(-50%) skewX(-15deg);
+            z-index: 0;
+            border-radius: 4px;
+        }
+
+        .price-note {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1rem;
+        }
+
+        /* Form Steps */
+        .form-steps {
+            display: flex;
+            justify-content: space-between;
+            margin: 50px auto 40px;
+            position: relative;
+            max-width: 600px;
+        }
+
+        .form-steps::before {
+            content: '';
+            position: absolute;
+            top: 25px;
+            left: 50px;
+            right: 50px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: 1;
+        }
+
+        .step {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            flex: 1;
+        }
+
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 700;
+            font-size: 1.2rem;
+            transition: var(--transition);
+            border: 2px solid transparent;
+        }
+
+        .step.active .step-number {
+            background: var(--primary);
+            color: white;
+            border-color: var(--unisa-gold);
+            box-shadow: 0 0 0 5px rgba(67, 97, 238, 0.2);
+        }
+
+        .step.completed .step-number {
+            background: var(--unisa-gold);
+            color: var(--dark);
+        }
+
+        .step-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .step.active .step-label {
+            color: white;
+            font-weight: 600;
+        }
+
+        /* UNISA Notice */
+        .unisa-notice {
+            background: rgba(227, 27, 35, 0.1);
+            border: 1px solid rgba(227, 27, 35, 0.3);
+            border-radius: var(--radius);
+            padding: 25px;
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            animation: slideIn 0.6s ease;
+        }
+
+        .unisa-notice i {
+            font-size: 2rem;
+            color: var(--unisa-gold);
+            flex-shrink: 0;
+        }
+
+        .unisa-notice h3 {
+            color: white;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        .unisa-notice p {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 5px;
+            font-size: 0.95rem;
+        }
+
+        /* Form Section */
+        .form-section {
+            margin-top: 30px;
+        }
+
+        .form-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 50px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at top right, rgba(67, 97, 238, 0.05), transparent 70%);
+            z-index: 0;
+        }
+
+        .form-card h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2rem;
+            margin-bottom: 35px;
+            color: #fff;
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .form-card h2 i {
+            color: var(--success);
+            font-size: 1.8rem;
+        }
+
+        /* Form */
+        form {
+            position: relative;
+            z-index: 1;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-steps {
+                flex-direction: column;
+                gap: 30px;
+            }
+            
+            .form-steps::before {
+                display: none;
+            }
+            
+            .unisa-notice {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        .label-icon {
+            color: var(--primary);
+            margin-right: 8px;
+        }
+
+        .required::after {
+            content: ' *';
+            color: var(--unisa-red);
+        }
+
+        /* Input with Icon */
+        .input-with-icon {
+            position: relative;
+        }
+
+        .input-with-icon i {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.5);
+            transition: var(--transition);
+        }
+
+        .input-with-icon input,
+        .input-with-icon select,
+        .input-with-icon textarea {
+            padding-left: 50px;
+        }
+
+        .input-with-icon input:focus + i,
+        .input-with-icon select:focus + i,
+        .input-with-icon textarea:focus + i {
+            color: var(--primary);
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 16px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius);
+            color: #fff;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 20px center;
+            background-size: 20px;
+            padding-right: 50px;
+            cursor: pointer;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 140px;
+        }
+
+        /* File Upload */
+        .file-upload-wrapper {
+            position: relative;
+            margin-top: 10px;
+        }
+
+        .file-upload-wrapper input[type="file"] {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .file-upload-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            border-radius: var(--radius);
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .file-upload-label:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--primary);
+            color: #fff;
+        }
+
+        .file-upload-label i {
+            font-size: 1.5rem;
+        }
+
+        .file-name {
+            margin-top: 10px;
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius);
+            font-size: 0.9rem;
+            color: var(--success);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .remove-file {
+            color: var(--accent);
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .remove-file:hover {
+            color: #fff;
+        }
+
+        /* Button */
+        .submit-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            width: 100%;
+            padding: 18px 40px;
+            background: var(--assignment-gradient);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            margin-top: 30px;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(67, 97, 238, 0.3);
+        }
+
+        .submit-btn i {
+            transition: transform 0.3s ease;
+        }
+
+        .submit-btn:hover i {
+            transform: translateX(5px);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(0, 0, 0, 0.3);
+            margin-top: 60px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        footer p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1rem;
+        }
+
+        footer .fa-heart {
+            color: var(--accent);
+            margin: 0 5px;
+        }
+
+        /* Form Hint */
+        .form-hint {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 5px;
+            padding-left: 5px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .inner-header {
+                padding: 60px 0 40px;
+            }
+
+            .inner-header h1 {
+                font-size: 2.5rem;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .info-card,
+            .price-card,
+            .form-card {
+                padding: 30px;
+            }
+
+            .form-card {
+                padding: 30px;
+            }
+
+            .price-tag {
+                font-size: 2.8rem;
+            }
+
+            .submit-btn {
+                padding: 16px 30px;
+                font-size: 1.1rem;
+            }
+            
+            .price-badge {
+                position: relative;
+                top: 0;
+                right: 0;
+                margin-bottom: 20px;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .inner-header h1 {
+                font-size: 2rem;
+            }
+
+            .inner-header p {
+                font-size: 1rem;
+            }
+
+            .info-card h2,
+            .price-card h2,
+            .form-card h2 {
+                font-size: 1.6rem;
+            }
+
+            .service-list li {
+                font-size: 0.95rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="inner-header">
+        <div class="container">
+            <h1><i class="fas fa-tasks"></i> UNISA Assignment Assistance</h1>
+            <p>Expert academic support for University of South Africa students</p>
+            
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <section class="service-details">
+        <div class="container">
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-messages">
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category if category in ['success', 'danger', 'warning', 'info'] else 'info' }}">
+                                <i class="fas 
+                                    {% if category == 'success' %}fa-check-circle
+                                    {% elif category == 'danger' %}fa-exclamation-circle
+                                    {% elif category == 'warning' %}fa-exclamation-triangle
+                                    {% else %}fa-info-circle{% endif %}">
+                                </i>
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            <!-- Form Steps -->
+            <div class="form-steps">
+                <div class="step active">
+                    <div class="step-number">1</div>
+                    <div class="step-label">Assignment Details</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-label">Payment</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-label">Confirmation</div>
+                </div>
+            </div>
+
+            <!-- UNISA Notice -->
+            <div class="unisa-notice">
+                <i class="fas fa-shield-alt"></i>
+                <div>
+                    <h3>UNISA-Only Assignment Service</h3>
+                    <p>This service is exclusively available for University of South Africa students.</p>
+                    <p>All our tutors are familiar with UNISA's academic standards and marking rubrics.</p>
+                </div>
+            </div>
+
+            <div class="content-grid">
+                <!-- What We Offer -->
+                <div class="info-card">
+                    <h2><i class="fas fa-book-open"></i> What We Offer</h2>
+                    <ul class="service-list">
+                        <li><i class="fas fa-check-circle"></i> Essay writing and editing</li>
+                        <li><i class="fas fa-check-circle"></i> Research papers and reports</li>
+                        <li><i class="fas fa-check-circle"></i> Coding assignments</li>
+                        <li><i class="fas fa-check-circle"></i> Problem sets (Maths, Physics, Engineering)</li>
+                        <li><i class="fas fa-check-circle"></i> Case studies and presentations</li>
+                        <li><i class="fas fa-check-circle"></i> Literature reviews</li>
+                        <li><i class="fas fa-check-circle"></i> Lab reports and scientific papers</li>
+                    </ul>
+                </div>
+
+                <!-- Pricing -->
+                <div class="price-card">
+                    <div class="price-badge">
+                        <i class="fas fa-tag"></i> Standard Rate
+                    </div>
+                    <h2><i class="fas fa-tag"></i> Pricing</h2>
+                    <div class="price-tag">
+                        <span>R300.00</span>
+                    </div>
+                    <p class="price-note">Standard assignment assistance</p>
+                    <p class="price-note" style="margin-top: 15px; font-size: 0.9rem; color: var(--unisa-gold);">
+                        <i class="fas fa-clock"></i> 24-48 hour turnaround
+                    </p>
+                    <p class="price-note" style="margin-top: 10px; font-size: 0.9rem;">
+                        <i class="fas fa-check-circle"></i> Plagiarism-free work
+                    </p>
+                </div>
+            </div>
+
+            <!-- Form Section -->
+            <div class="form-section">
+                <div class="form-card">
+                    <h2><i class="fas fa-file-upload"></i> Submit Assignment Details</h2>
+
+                    <form id="assignment-form" action="{{ url_for('submit_assignment') }}" method="POST" enctype="multipart/form-data">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="required">Full Name</label>
+                                <div class="input-with-icon">
+                                    <i class="fas fa-user"></i>
+                                    <input type="text" name="name" required placeholder="Enter your full name">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="required">Email Address</label>
+                                <div class="input-with-icon">
+                                    <i class="fas fa-envelope"></i>
+                                    <input type="email" name="email" required placeholder="yourname@mylife.unisa.ac.za">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="required">Contact Number</label>
+                                <div class="input-with-icon">
+                                    <i class="fas fa-phone"></i>
+                                    <input type="tel" name="contact" required placeholder="+27 12 345 6789">
+                                </div>
+                                <p class="form-hint">Include country code if international</p>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="required">University</label>
+                                <div class="input-with-icon">
+                                    <i class="fas fa-university"></i>
+                                    <input type="text" name="university" value="University of South Africa (UNISA)" readonly>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="required">Assignment Type</label>
+                                <div class="input-with-icon">
+                                    <i class="fas fa-file-alt"></i>
+                                    <select name="assignment_type" required style="background-color: #0c1a3c;">
+                                        <option value="">Select type</option>
+                                        <option value="Essay">Essay</option>
+                                        <option value="Research Paper">Research Paper</option>
+                                        <option value="Coding Assignment">Coding Assignment</option>
+                                        <option value="Math/Physics Problem Set">Math/Physics Problem Set</option>
+                                        <option value="Case Study">Case Study</option>
+                                        <option value="Literature Review">Literature Review</option>
+                                        <option value="Lab Report">Lab Report</option>
+                                        <option value="Thesis Chapter">Thesis Chapter</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="required">Module Code & Name</label>
+                                <div class="input-with-icon">
+                                    <i class="fas fa-book"></i>
+                                    <input type="text" name="subject" required placeholder="e.g. INF3708 - Advanced Databases">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="required">Due Date</label>
+                                <div class="input-with-icon">
+                                    <i class="fas fa-calendar-day"></i>
+                                    <input type="date" name="due_date" required>
+                                </div>
+                                <p class="form-hint">Select when you need this completed</p>
+                            </div>
+                            <div class="form-group">
+                                <!-- Spacer for alignment -->
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="required">Assignment Instructions</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-clipboard-list"></i>
+                                <textarea name="details" rows="6" required placeholder="Please describe your assignment requirements, specific instructions, grading criteria, marking rubric, word count, formatting requirements, and any other important details..."></textarea>
+                            </div>
+                            <p class="form-hint">Detailed instructions help us provide better assistance (minimum 50 characters)</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Upload Assignment Files (Optional)</label>
+                            <div class="file-upload-wrapper">
+                                <input type="file" name="file" id="file-input" accept=".pdf,.doc,.docx,.txt,.zip,.rar,.jpg,.png">
+                                <div class="file-upload-label">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <span>Click to browse or drag & drop files here</span>
+                                </div>
+                            </div>
+                            <div id="file-name" class="file-name" style="display: none;"></div>
+                            <p class="form-hint">Supported: PDF, DOC, DOCX, TXT, ZIP, RAR, JPG, PNG (Max 20MB)</p>
+                        </div>
+
+                        <button type="submit" class="submit-btn" id="submit-button">
+                            <i class="fas fa-paper-plane"></i> Proceed to Secure Payment (R300.00)
+                        </button>
+
+                        <div style="text-align: center; margin-top: 20px; color: rgba(255, 255, 255, 0.6); font-size: 0.9rem;">
+                            <i class="fas fa-lock"></i> Secure payment processing • UNISA compliant • 24/7 support
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>© 2025 AcademicAssistPro — Exclusively for UNISA Students | Made with <i class="fas fa-heart"></i> for academic success</p>
+        </div>
+    </footer>
+
+    <script>
+        // Set minimum date
+        document.addEventListener('DOMContentLoaded', function () {
+            const today = new Date();
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+
+            const dateInput = document.querySelector('input[name="due_date"]');
+            dateInput.min = tomorrow.toISOString().split('T')[0];
+
+            // Set default to 3 days from now
+            const defaultDate = new Date(today);
+            defaultDate.setDate(defaultDate.getDate() + 3);
+            dateInput.value = defaultDate.toISOString().split('T')[0];
+        });
+
+        // File upload handling
+        const fileInput = document.getElementById('file-input');
+        const fileNameDisplay = document.getElementById('file-name');
+
+        fileInput.addEventListener('change', function () {
+            if (this.files.length > 0) {
+                const file = this.files[0];
+                const fileSize = (file.size / 1024 / 1024).toFixed(2); // Convert to MB
+
+                if (fileSize > 20) {
+                    alert('File size exceeds 20MB limit. Please upload a smaller file.');
+                    this.value = '';
+                    fileNameDisplay.style.display = 'none';
+                    fileNameDisplay.textContent = '';
+                    return;
+                }
+
+                fileNameDisplay.innerHTML = `
+                    <span><i class="fas fa-file" style="margin-right: 8px;"></i>${file.name} (${fileSize} MB)</span>
+                    <span class="remove-file" onclick="removeFile()">
+                        <i class="fas fa-times"></i>
+                    </span>
+                `;
+                fileNameDisplay.style.display = 'flex';
+            }
+        });
+
+        // Remove file function
+        function removeFile() {
+            fileInput.value = '';
+            fileNameDisplay.style.display = 'none';
+        }
+
+        // Drag and drop
+        const dropArea = document.querySelector('.file-upload-label');
+
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropArea.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight() {
+            dropArea.style.background = 'rgba(67, 97, 238, 0.1)';
+            dropArea.style.borderColor = 'var(--primary)';
+            dropArea.style.color = 'white';
+        }
+
+        function unhighlight() {
+            dropArea.style.background = '';
+            dropArea.style.borderColor = '';
+            dropArea.style.color = '';
+        }
+
+        dropArea.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            fileInput.files = files;
+            fileInput.dispatchEvent(new Event('change'));
+        }
+
+        // Form validation
+        const form = document.getElementById('assignment-form');
+        const submitBtn = document.getElementById('submit-button');
+
+        form.addEventListener('submit', function (e) {
+            let valid = true;
+            const errors = [];
+
+            // Validate name
+            const name = document.querySelector('input[name="name"]');
+            if (name.value.trim().length < 2) {
+                errors.push('Please enter a valid name');
+                highlightField(name);
+                valid = false;
+            } else {
+                unhighlightField(name);
+            }
+
+            // Validate email
+            const email = document.querySelector('input[name="email"]');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email.value)) {
+                errors.push('Please enter a valid email address');
+                highlightField(email);
+                valid = false;
+            } else {
+                unhighlightField(email);
+            }
+
+            // Validate contact
+            const contact = document.querySelector('input[name="contact"]');
+            const phoneRegex = /^[\+]?[1-9][\d\s\-\(\)]{8,20}$/;
+            const cleanedContact = contact.value.replace(/\s/g, '');
+            if (!phoneRegex.test(cleanedContact)) {
+                errors.push('Please enter a valid phone number (8-20 digits)');
+                highlightField(contact);
+                valid = false;
+            } else {
+                unhighlightField(contact);
+            }
+
+            // Validate details
+            const details = document.querySelector('textarea[name="details"]');
+            if (details.value.trim().length < 50) {
+                errors.push('Please provide more detailed instructions (at least 50 characters)');
+                highlightField(details);
+                valid = false;
+            } else {
+                unhighlightField(details);
+            }
+
+            // Validate due date
+            const dueDate = document.querySelector('input[name="due_date"]');
+            const selectedDate = new Date(dueDate.value);
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            
+            if (selectedDate < tomorrow) {
+                errors.push('Due date must be at least tomorrow');
+                highlightField(dueDate);
+                valid = false;
+            } else {
+                unhighlightField(dueDate);
+            }
+
+            if (!valid) {
+                e.preventDefault();
+                
+                // Show error messages
+                let errorMessage = 'Please fix the following errors:\n\n';
+                errors.forEach((error, index) => {
+                    errorMessage += `${index + 1}. ${error}\n`;
+                });
+                
+                alert(errorMessage);
+                return false;
+            }
+            
+            // If valid, show loading state
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            submitBtn.disabled = true;
+            
+            // Form will submit normally
+        });
+
+        function highlightField(field) {
+            field.style.borderColor = 'var(--unisa-red)';
+            field.style.boxShadow = '0 0 0 3px rgba(227, 27, 35, 0.2)';
+        }
+
+        function unhighlightField(field) {
+            field.style.borderColor = '';
+            field.style.boxShadow = '';
+        }
+
+        // Format phone number as user types
+        const contactInput = document.querySelector('input[name="contact"]');
+        contactInput.addEventListener('input', function (e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 0) {
+                if (value.length <= 2) {
+                    value = '+' + value;
+                } else if (value.length <= 5) {
+                    value = '+' + value.substring(0, 2) + ' ' + value.substring(2);
+                } else if (value.length <= 8) {
+                    value = '+' + value.substring(0, 2) + ' ' + value.substring(2, 5) + ' ' + value.substring(5);
+                } else {
+                    value = '+' + value.substring(0, 2) + ' ' + value.substring(2, 5) + ' ' + value.substring(5, 8) + ' ' + value.substring(8, 11);
+                }
+            }
+            e.target.value = value;
+        });
+
+        // Update step indicator on form progress
+        const formSteps = document.querySelectorAll('.step');
+        const formFields = document.querySelectorAll('[required]');
+        
+        form.addEventListener('input', function() {
+            let filledFields = 0;
+            
+            formFields.forEach(field => {
+                if (field.value.trim()) filledFields++;
+            });
+            
+            const progress = (filledFields / formFields.length) * 100;
+            
+            if (progress > 33 && progress < 66) {
+                formSteps[0].classList.add('completed');
+                formSteps[1].classList.add('active');
+            } else if (progress >= 66) {
+                formSteps[0].classList.add('completed');
+                formSteps[1].classList.add('completed');
+                formSteps[2].classList.add('active');
+            }
+        });
+
+        // Auto-focus on first input
+        document.querySelector('input[name="name"]').focus();
+    </script>
+</body>
+</html>

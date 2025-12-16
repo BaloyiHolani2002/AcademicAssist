@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment | AcademicAssistPro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #7209b7;
+            --accent: #f72585;
+            --success: #4cc9f0;
+            --light: #f8f9fa;
+            --dark: #1a1a2e;
+            --darker: #16213e;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --border: rgba(255, 255, 255, 0.1);
+            --shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            --shadow-hover: 0 15px 40px rgba(0, 0, 0, 0.2);
+            --radius: 10px;
+            --radius-lg: 16px;
+            --transition: all 0.25s ease;
+            --assignment-color: #4361ee;
+            --quiz-color: #7209b7;
+            --exam-color: #f72585;
+            --unisa-red: #E31B23;
+            --unisa-gold: #FFD700;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0a0a2e 0%, #1a1a40 100%);
+            color: #fff;
+            min-height: 100vh;
+            line-height: 1.6;
+            overflow-x: hidden;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Service Badge */
+        .service-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .badge-assignment {
+            background: rgba(67, 97, 238, 0.15);
+            color: #4361ee;
+            border: 1px solid rgba(67, 97, 238, 0.3);
+        }
+
+        .badge-quiz {
+            background: rgba(114, 9, 183, 0.15);
+            color: #7209b7;
+            border: 1px solid rgba(114, 9, 183, 0.3);
+        }
+
+        .badge-exam {
+            background: rgba(247, 37, 133, 0.15);
+            color: #f72585;
+            border: 1px solid rgba(247, 37, 133, 0.3);
+        }
+
+        .payment-header {
+            text-align: center;
+            padding: 60px 0 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .payment-header::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background: radial-gradient(circle, rgba(67, 97, 238, 0.05) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .payment-header h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+            background: linear-gradient(45deg, #fff 30%, #4cc9f0 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .payment-header h1 i {
+            margin-right: 15px;
+        }
+
+        .payment-header p {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            max-width: 700px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Request Summary */
+        .request-summary {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .summary-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .summary-item i {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .summary-info h4 {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 5px;
+        }
+
+        .summary-info p {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .total-amount {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 20px 30px;
+            border-radius: var(--radius);
+            text-align: center;
+            min-width: 200px;
+        }
+
+        .total-amount h4 {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 10px;
+        }
+
+        .total-amount .amount {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #fff;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        /* Main Content */
+        .payment-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+
+        @media (max-width: 768px) {
+            .payment-content {
+                grid-template-columns: 1fr;
+            }
+
+            .request-summary {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .total-amount {
+                width: 100%;
+            }
+        }
+
+        /* Banking Details Card */
+        .banking-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .banking-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .banking-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--success), var(--primary));
+        }
+
+        .banking-card h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .banking-card h2 i {
+            color: var(--success);
+        }
+
+        .bank-details {
+            list-style: none;
+        }
+
+        .bank-details li {
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: var(--transition);
+        }
+
+        .bank-details li:hover {
+            padding-left: 10px;
+        }
+
+        .bank-details li:last-child {
+            border-bottom: none;
+        }
+
+        .bank-details li i {
+            color: var(--primary);
+            font-size: 1.2rem;
+            width: 24px;
+        }
+
+        .bank-details strong {
+            font-weight: 600;
+            color: var(--light);
+            min-width: 120px;
+        }
+
+        .bank-details span {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Service Pricing */
+        .service-pricing {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: var(--radius);
+        }
+
+        .service-pricing h3 {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .service-pricing h3 i {
+            color: var(--unisa-gold);
+        }
+
+        .pricing-list {
+            display: grid;
+            gap: 10px;
+        }
+
+        .pricing-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius);
+        }
+
+        .pricing-item.active {
+            background: rgba(227, 27, 35, 0.15);
+            border: 1px solid rgba(227, 27, 35, 0.3);
+        }
+
+        .important-note {
+            background: rgba(247, 37, 133, 0.1);
+            border-left: 4px solid var(--accent);
+            padding: 20px;
+            border-radius: var(--radius);
+            margin-top: 30px;
+            font-size: 0.95rem;
+        }
+
+        .important-note i {
+            color: var(--accent);
+            margin-right: 10px;
+        }
+
+        /* Upload Form Card */
+        .upload-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at top right, rgba(67, 97, 238, 0.05), transparent 70%);
+            z-index: 0;
+        }
+
+        .upload-card h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            color: #fff;
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .upload-card h2 i {
+            color: var(--accent);
+        }
+
+        /* Form Styles */
+        form {
+            position: relative;
+            z-index: 1;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
+            color: #fff;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        label i {
+            color: var(--primary);
+        }
+
+        .required::after {
+            content: ' *';
+            color: var(--accent);
+        }
+
+        /* File Upload */
+        .file-upload-wrapper {
+            position: relative;
+            margin-top: 10px;
+        }
+
+        .file-upload-input {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        .file-upload-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 30px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            border-radius: var(--radius);
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            position: relative;
+        }
+
+        .file-upload-label:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--primary);
+            color: #fff;
+        }
+
+        .file-upload-label i {
+            font-size: 2rem;
+        }
+
+        .file-name {
+            margin-top: 10px;
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius);
+            font-size: 0.9rem;
+            color: var(--success);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .remove-file {
+            color: var(--accent);
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .remove-file:hover {
+            color: #fff;
+        }
+
+        .file-hint {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 8px;
+            padding-left: 5px;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius);
+            color: #fff;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        /* Submit Button */
+        .submit-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            width: 100%;
+            padding: 18px 40px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(67, 97, 238, 0.3);
+        }
+
+        .submit-btn i {
+            transition: transform 0.3s ease;
+        }
+
+        .submit-btn:hover i {
+            transform: translateX(5px);
+        }
+
+        /* Payment Methods */
+        .payment-methods {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .payment-method {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .payment-method i {
+            color: var(--success);
+            font-size: 1.2rem;
+        }
+
+        /* UNISA Notice */
+        .unisa-notice {
+            background: rgba(227, 27, 35, 0.1);
+            border: 1px solid rgba(227, 27, 35, 0.3);
+            border-radius: var(--radius);
+            padding: 25px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .unisa-notice i {
+            font-size: 2rem;
+            color: var(--unisa-gold);
+        }
+
+        .unisa-notice h3 {
+            color: #fff;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        .unisa-notice p {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 5px;
+            font-size: 0.95rem;
+        }
+
+        /* Footer */
+        .payment-footer {
+            text-align: center;
+            padding: 40px 20px;
+            margin-top: 60px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .payment-footer p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1rem;
+        }
+
+        .payment-footer .fa-heart {
+            color: var(--accent);
+            margin: 0 5px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 15px;
+            }
+
+            .payment-header {
+                padding: 40px 0 30px;
+            }
+
+            .payment-header h1 {
+                font-size: 2.3rem;
+            }
+
+            .payment-header p {
+                font-size: 1rem;
+            }
+
+            .banking-card,
+            .upload-card {
+                padding: 30px;
+            }
+
+            .bank-details li {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+
+            .bank-details strong {
+                min-width: auto;
+            }
+
+            .submit-btn {
+                padding: 16px 30px;
+                font-size: 1.1rem;
+            }
+
+            .unisa-notice {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .payment-header h1 {
+                font-size: 2rem;
+            }
+
+            .banking-card h2,
+            .upload-card h2 {
+                font-size: 1.6rem;
+            }
+
+            .payment-methods {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Service Badge -->
+        <div class="service-badge" id="service-badge">
+            <!-- Will be populated by JavaScript -->
+        </div>
+
+        <!-- Header -->
+        <header class="payment-header animate-in">
+            <h1><i class="fas fa-credit-card"></i> Complete Your Payment</h1>
+            <p>Secure payment processing for your academic assistance request</p>
+        </header>
+
+        <!-- UNISA Notice -->
+        <div class="unisa-notice animate-in">
+            <i class="fas fa-university"></i>
+            <div>
+                <h3>Exclusive UNISA Service</h3>
+                <p>This payment is for University of South Africa (UNISA) students only.</p>
+                <p>Please ensure you use your student number as the payment reference.</p>
+            </div>
+        </div>
+
+        
+
+        <!-- Main Content -->
+        <div class="payment-content">
+            <!-- Banking Details -->
+            <div class="banking-card animate-in delay-1">
+                <h2><i class="fas fa-university"></i> Banking Details</h2>
+                <ul class="bank-details">
+                    <li>
+                        <i class="fas fa-landmark"></i>
+                        <strong>Bank:</strong>
+                        <span>FNB (First National Bank)</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-user-tie"></i>
+                        <strong>Account Name:</strong>
+                        <span>AcademicAssistPro</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-hashtag"></i>
+                        <strong>Account Number:</strong>
+                        <span>628 456 7890</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-file-invoice"></i>
+                        <strong>Account Type:</strong>
+                        <span>Business Cheque Account</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-key"></i>
+                        <strong>Reference:</strong>
+                        <span id="payment-reference">Your Student Number</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-money-bill-wave"></i>
+                        <strong>Amount:</strong>
+                    </li>
+                </ul>
+
+                <!-- Service Pricing -->
+                <div class="service-pricing">
+                    <h3><i class="fas fa-tags"></i> Service Pricing</h3>
+                    <div class="pricing-list">
+                        <div class="pricing-item" id="assignment-price">
+                            <span>Assignment Assistance</span>
+                            <strong>R300.00</strong>
+                        </div>
+                        <div class="pricing-item" id="quiz-price">
+                            <span>Quiz/Test Assistance</span>
+                            <strong>R200.00</strong>
+                        </div>
+                        <div class="pricing-item" id="exam-price">
+                            <span>Exam Assistance</span>
+                            <strong>R600.00</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="important-note">
+                    <p><i class="fas fa-exclamation-circle"></i> <strong>Important:</strong> Use your Student Number as the payment reference. This is essential for matching your payment to your request.</p>
+                </div>
+            </div>
+
+            <!-- Upload Form -->
+            <div class="upload-card animate-in delay-2">
+                <h2><i class="fas fa-file-upload"></i> Upload Proof of Payment</h2>
+
+                <form action="{{ url_for('upload_proof') }}" method="POST" enctype="multipart/form-data" id="payment-form">
+                    <!-- Hidden field to identify service type -->
+                    <input type="hidden" name="service_type" id="service-type-input" value="">
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-file-invoice-dollar"></i> Proof of Payment <span class="required"></span></label>
+                        <div class="file-upload-wrapper">
+                            <input type="file" name="proof" id="proof-file" class="file-upload-input" 
+                                   accept=".jpg,.jpeg,.png,.pdf,.heic" required>
+                            <label for="proof-file" class="file-upload-label">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <div>
+                                    <p>Click to upload proof of payment</p>
+                                    <small>scan of your payment confirmation</small>
+                                </div>
+                            </label>
+                        </div>
+                        <div id="file-name" class="file-name" style="display: none;"></div>
+                        <div class="file-hint">
+                            <i class="fas fa-info-circle"></i> Accepted: PNG (Max 10MB)
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fas fa-sticky-note"></i> Payment Notes (Optional)</label>
+                        <textarea name="notes" id="payment-notes" 
+                                  placeholder="Add any notes about your payment (e.g., time of payment, bank used, etc.)"></textarea>
+                    </div>
+
+                    <!-- Payment Methods -->
+                    <div class="form-group">
+                        <label><i class="fas fa-money-check-alt"></i> Payment Method Used</label>
+                        <div class="payment-methods">
+                            <div class="payment-method">
+                                <i class="fas fa-mobile-alt"></i>
+                                <span>Mobile Banking</span>
+                            </div>
+                            <div class="payment-method">
+                                <i class="fas fa-laptop"></i>
+                                <span>Online Banking</span>
+                            </div>
+                            <div class="payment-method">
+                                <i class="fas fa-bank"></i>
+                                <span>ATM/Branch</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="submit-btn" id="submit-button">
+                        <i class="fas fa-paper-plane"></i> Submit Payment Proof
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="payment-footer">
+            <p>© 2025 AcademicAssistPro — Exclusively for UNISA Students</p>
+            <p style="margin-top: 10px; font-size: 0.9rem; color: rgba(255,255,255,0.5);">
+                <i class="fas fa-lock"></i> Secure Payment Processing | <i class="fas fa-shield-alt"></i> UNISA Compliant
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // Get service type from session storage or URL parameters
+        function getServiceType() {
+            // Check URL parameters first
+            const urlParams = new URLSearchParams(window.location.search);
+            const serviceType = urlParams.get('service') || 
+                               sessionStorage.getItem('service_type') || 
+                               'assignment';
+            
+            return serviceType.toLowerCase();
+        }
+
+        // Get request details from session storage
+        function getRequestDetails() {
+            const serviceType = getServiceType();
+            let details = {};
+            
+            switch(serviceType) {
+                case 'quiz':
+                    details = JSON.parse(sessionStorage.getItem('quiz_request') || '{}');
+                    break;
+                case 'exam':
+                    details = JSON.parse(sessionStorage.getItem('exam_request') || '{}');
+                    break;
+                case 'assignment':
+                default:
+                    details = JSON.parse(sessionStorage.getItem('assignment_request') || '{}');
+                    break;
+            }
+            
+            return details;
+        }
+
+        // Set pricing based on service type
+        function setPricing(serviceType) {
+            const assignmentPrice = document.getElementById('assignment-price');
+            const quizPrice = document.getElementById('quiz-price');
+            const examPrice = document.getElementById('exam-price');
+            
+            // Reset all
+            assignmentPrice.classList.remove('active');
+            quizPrice.classList.remove('active');
+            examPrice.classList.remove('active');
+            
+            let amount = 'R0.00';
+            let serviceName = '';
+            let badgeClass = '';
+            
+            switch(serviceType) {
+                case 'quiz':
+                    quizPrice.classList.add('active');
+                    amount = 'R200.00';
+                    serviceName = 'Quiz/Test Assistance';
+                    badgeClass = 'badge-quiz';
+                    break;
+                case 'exam':
+                    examPrice.classList.add('active');
+                    amount = 'R600.00';
+                    serviceName = 'Exam Assistance';
+                    badgeClass = 'badge-exam';
+                    break;
+                case 'assignment':
+                default:
+                    assignmentPrice.classList.add('active');
+                    amount = 'R300.00';
+                    serviceName = 'Assignment Assistance';
+                    badgeClass = 'badge-assignment';
+                    break;
+            }
+            
+            // Update display
+            document.getElementById('total-amount').textContent = amount;
+            document.getElementById('payment-amount').textContent = amount;
+            document.getElementById('service-type').textContent = serviceName;
+            
+            // Update badge
+            const badge = document.getElementById('service-badge');
+            badge.className = 'service-badge ' + badgeClass;
+            badge.textContent = serviceName;
+            
+            // Set hidden input for service type
+            document.getElementById('service-type-input').value = serviceType;
+            
+            return { amount, serviceName, badgeClass };
+        }
+
+        // Update request summary
+        function updateRequestSummary() {
+            const details = getRequestDetails();
+            const serviceType = getServiceType();
+            const pricing = setPricing(serviceType);
+            
+            // Update student name
+            if (details.name) {
+                document.getElementById('student-name').textContent = details.name;
+            }
+            
+            // Update subject
+            if (details.subject) {
+                document.getElementById('subject-name').textContent = details.subject;
+            }
+            
+            // Update payment reference
+            const reference = details.studentNumber || details.email || 'Your Student Number';
+            document.getElementById('payment-reference').textContent = reference;
+        }
+
+        // File upload handling
+        const fileInput = document.getElementById('proof-file');
+        const fileNameDisplay = document.getElementById('file-name');
+
+        fileInput.addEventListener('change', function () {
+            if (this.files.length > 0) {
+                const file = this.files[0];
+                const fileSize = (file.size / (1024 * 1024)).toFixed(2); // Convert to MB
+
+                // Validate file size
+                if (parseFloat(fileSize) > 10) {
+                    alert('File size exceeds 10MB limit. Please upload a smaller file.');
+                    this.value = '';
+                    fileNameDisplay.style.display = 'none';
+                    return;
+                }
+
+                // Validate file type
+                const allowedTypes = [
+                    'image/jpeg',
+                    'image/jpg',
+                    'image/png',
+                    'application/pdf',
+                    'image/heic',
+                    'image/heif'
+                ];
+                
+                if (!allowedTypes.includes(file.type)) {
+                    alert('Please upload a PDF, JPG, JPEG, PNG, or HEIC file.');
+                    this.value = '';
+                    fileNameDisplay.style.display = 'none';
+                    return;
+                }
+
+                // Display file name
+                fileNameDisplay.innerHTML = `
+                    <span><i class="fas fa-file" style="margin-right: 8px;"></i>${file.name} (${fileSize} MB)</span>
+                    <span class="remove-file" onclick="removeFile()">
+                        <i class="fas fa-times"></i>
+                    </span>
+                `;
+                fileNameDisplay.style.display = 'flex';
+            }
+        });
+
+        // Remove file function
+        function removeFile() {
+            fileInput.value = '';
+            fileNameDisplay.style.display = 'none';
+        }
+
+        // Drag and drop functionality
+        const dropArea = document.querySelector('.file-upload-label');
+
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropArea.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight() {
+            dropArea.style.background = 'rgba(67, 97, 238, 0.1)';
+            dropArea.style.borderColor = 'var(--primary)';
+            dropArea.style.color = 'white';
+        }
+
+        function unhighlight() {
+            dropArea.style.background = '';
+            dropArea.style.borderColor = '';
+            dropArea.style.color = '';
+        }
+
+        dropArea.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            fileInput.files = files;
+            fileInput.dispatchEvent(new Event('change'));
+        }
+
+        // Form validation
+        document.getElementById('payment-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            
+            // Validate file
+            if (!fileInput.files.length) {
+                alert('Please select a proof of payment file.');
+                fileInput.focus();
+                return false;
+            }
+
+            // Show loading state
+            const submitBtn = document.getElementById('submit-button');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            submitBtn.disabled = true;
+
+            // Simulate form submission
+            setTimeout(() => {
+                // In production, this would be handled by Flask
+                // For demo, simulate success and redirect
+                
+                // Store payment timestamp in session
+                sessionStorage.setItem('payment_time', new Date().toISOString());
+                
+                // Redirect to queue tracking
+                window.location.href = "{{ url_for('queue_tracking') }}";
+            }, 1500);
+
+            return false;
+        });
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function () {
+            updateRequestSummary();
+            
+            // Animate elements
+            const animatedElements = document.querySelectorAll('.animate-in');
+            animatedElements.forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(20px)';
+            });
+
+            setTimeout(() => {
+                animatedElements.forEach(el => {
+                    el.style.opacity = '1';
+                    el.style.transform = 'translateY(0)';
+                    el.style.transition = 'all 0.6s ease';
+                });
+            }, 100);
+        });
+
+        // Auto-focus on file input when clicking label
+        document.querySelector('.file-upload-label').addEventListener('click', function() {
+            fileInput.click();
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Exam Assistance | UNISA Academic Assist</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #7209b7;
+            --accent: #f72585;
+            --success: #4cc9f0;
+            --light: #f8f9fa;
+            --dark: #1a1a2e;
+            --darker: #16213e;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.15);
+            --shadow-color: 0 10px 30px rgba(67, 97, 238, 0.2);
+            --radius: 16px;
+            --radius-sm: 10px;
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+            --gradient-primary: linear-gradient(135deg, #4361ee, #3a0ca3);
+            --gradient-secondary: linear-gradient(135deg, #7209b7, #f72585);
+            --gradient-accent: linear-gradient(135deg, #f72585, #ff9e00);
+            --gradient-bg: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            --gradient-light: linear-gradient(135deg, #f0f4ff 0%, #f9f0ff 100%);
+            --unisa-red: #E31B23;
+            --unisa-gold: #FFD700;
+            --unisa-bg: linear-gradient(135deg, #0c1a3c, #1a1a2e);
+            --exam-gradient: linear-gradient(135deg, #f72585, #7209b7);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--unisa-bg);
+            background-attachment: fixed;
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: var(--light);
+            min-height: 100vh;
+            line-height: 1.7;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styling */
+        .inner-header {
+            background: rgba(26, 26, 46, 0.9);
+            backdrop-filter: blur(20px);
+            padding: 80px 0 50px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .inner-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--exam-gradient);
+        }
+
+        .inner-header h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 3rem;
+            margin-bottom: 15px;
+            background: linear-gradient(45deg, #fff 30%, var(--unisa-gold) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .inner-header p {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* UNISA Badge */
+        .unisa-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(227, 27, 35, 0.15);
+            border: 2px solid rgba(227, 27, 35, 0.3);
+            color: var(--unisa-red);
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            margin-top: 20px;
+            font-size: 1.1rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Service Details */
+        .service-details {
+            padding: 60px 0 100px;
+        }
+
+        .service-form {
+            background: rgba(26, 26, 46, 0.8);
+            backdrop-filter: blur(20px);
+            border-radius: var(--radius);
+            padding: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: var(--shadow-lg);
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-form::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23f72585' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+            opacity: 0.3;
+            z-index: -1;
+        }
+
+        /* Form Layout */
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .form-group label.required::after {
+            content: ' *';
+            color: var(--unisa-red);
+        }
+
+        /* Form Inputs */
+        input, select, textarea {
+            width: 100%;
+            padding: 16px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-sm);
+            color: white;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            transition: var(--transition);
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 3px rgba(247, 37, 133, 0.2);
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        input:disabled {
+            background: rgba(227, 27, 35, 0.1);
+            border-color: rgba(227, 27, 35, 0.2);
+            color: var(--unisa-gold);
+            font-weight: 600;
+            cursor: not-allowed;
+        }
+
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23ffffff' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 20px center;
+            background-size: 16px;
+            padding-right: 50px;
+            cursor: pointer;
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        /* File Upload */
+        .file-upload-container {
+            position: relative;
+            margin-top: 10px;
+        }
+
+        .file-upload-label {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 18px 25px;
+            background: rgba(247, 37, 133, 0.1);
+            border: 2px dashed rgba(247, 37, 133, 0.3);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .file-upload-label:hover {
+            background: rgba(247, 37, 133, 0.15);
+            border-color: var(--accent);
+        }
+
+        .file-upload-label i {
+            font-size: 1.5rem;
+            color: var(--accent);
+        }
+
+        .file-upload-text {
+            flex: 1;
+        }
+
+        .file-upload-text p {
+            color: white;
+            margin-bottom: 5px;
+        }
+
+        .file-upload-text small {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        /* Submit Button */
+        .submit-btn {
+            width: 100%;
+            padding: 20px;
+            background: var(--exam-gradient);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 1.2rem;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(247, 37, 133, 0.3);
+        }
+
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+
+        /* UNISA Special Notice */
+        .unisa-notice {
+            background: rgba(227, 27, 35, 0.1);
+            border: 1px solid rgba(227, 27, 35, 0.3);
+            border-radius: var(--radius-sm);
+            padding: 25px;
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            animation: slideIn 0.6s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .unisa-notice i {
+            font-size: 2rem;
+            color: var(--unisa-gold);
+            flex-shrink: 0;
+        }
+
+        .unisa-notice h3 {
+            color: white;
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+
+        .unisa-notice p {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 5px;
+        }
+
+        /* Form Steps Indicator */
+        .form-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .form-steps::before {
+            content: '';
+            position: absolute;
+            top: 25px;
+            left: 50px;
+            right: 50px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: 1;
+        }
+
+        .step {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            flex: 1;
+        }
+
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 700;
+            font-size: 1.2rem;
+            transition: var(--transition);
+            border: 2px solid transparent;
+        }
+
+        .step.active .step-number {
+            background: var(--accent);
+            color: white;
+            border-color: var(--unisa-gold);
+            box-shadow: 0 0 0 5px rgba(247, 37, 133, 0.2);
+        }
+
+        .step.completed .step-number {
+            background: var(--unisa-gold);
+            color: var(--dark);
+        }
+
+        .step-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .step.active .step-label {
+            color: white;
+            font-weight: 600;
+        }
+
+        /* Input Icons */
+        .input-with-icon {
+            position: relative;
+        }
+
+        .input-with-icon i {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.5);
+            transition: var(--transition);
+        }
+
+        .input-with-icon input,
+        .input-with-icon select,
+        .input-with-icon textarea {
+            padding-left: 50px;
+        }
+
+        .input-with-icon input:focus + i,
+        .input-with-icon select:focus + i,
+        .input-with-icon textarea:focus + i {
+            color: var(--accent);
+        }
+
+        /* Exam Price Badge */
+        .price-badge {
+            position: absolute;
+            top: -15px;
+            right: -15px;
+            background: var(--exam-gradient);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            box-shadow: 0 10px 25px rgba(247, 37, 133, 0.3);
+            z-index: 2;
+            animation: floatBadge 3s ease-in-out infinite;
+        }
+
+        @keyframes floatBadge {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(5deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .inner-header {
+                padding: 60px 0 40px;
+            }
+
+            .inner-header h1 {
+                font-size: 2.2rem;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .service-form {
+                padding: 35px 25px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .form-steps {
+                flex-direction: column;
+                gap: 30px;
+            }
+
+            .form-steps::before {
+                display: none;
+            }
+
+            .unisa-notice {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .price-badge {
+                position: relative;
+                top: 0;
+                right: 0;
+                margin-bottom: 20px;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .inner-header h1 {
+                font-size: 1.8rem;
+            }
+
+            .inner-header p {
+                font-size: 1rem;
+            }
+
+            .submit-btn {
+                padding: 18px;
+                font-size: 1.1rem;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, var(--accent), var(--unisa-gold));
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #f72585, #ffd700);
+        }
+
+        /* Flash Messages */
+        .flash-messages {
+            max-width: 900px;
+            margin: 0 auto 30px;
+        }
+
+        .alert {
+            padding: 15px 20px;
+            border-radius: var(--radius-sm);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideIn 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .alert-success {
+            background: rgba(40, 167, 69, 0.15);
+            border-color: rgba(40, 167, 69, 0.3);
+            color: #4cc9f0;
+        }
+
+        .alert-danger {
+            background: rgba(220, 53, 69, 0.15);
+            border-color: rgba(220, 53, 69, 0.3);
+            color: #f72585;
+        }
+
+        .alert-warning {
+            background: rgba(255, 193, 7, 0.15);
+            border-color: rgba(255, 193, 7, 0.3);
+            color: #ffc107;
+        }
+
+        .alert-info {
+            background: rgba(23, 162, 184, 0.15);
+            border-color: rgba(23, 162, 184, 0.3);
+            color: #4cc9f0;
+        }
+    </style>
+</head>
+<body>
+
+<header class="inner-header">
+    <h1><i class="fas fa-graduation-cap"></i> UNISA Exam Assistance</h1>
+    <p>Professional exam preparation, revision, and support for University of South Africa students</p>
+    
+</header>
+
+<section class="service-details">
+    <div class="container">
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category if category in ['success', 'danger', 'warning', 'info'] else 'info' }}">
+                            <i class="fas 
+                                {% if category == 'success' %}fa-check-circle
+                                {% elif category == 'danger' %}fa-exclamation-circle
+                                {% elif category == 'warning' %}fa-exclamation-triangle
+                                {% else %}fa-info-circle{% endif %}">
+                            </i>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Form Steps -->
+        <div class="form-steps">
+            <div class="step active">
+                <div class="step-number">1</div>
+                <div class="step-label">Exam Details</div>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-label">Payment</div>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-label">Confirmation</div>
+            </div>
+        </div>
+
+        <!-- UNISA Notice -->
+        <div class="unisa-notice">
+            <i class="fas fa-shield-alt"></i>
+            <div>
+                <h3>UNISA-Only Exam Service</h3>
+                <p>This service is exclusively available for University of South Africa students.</p>
+                <p>Our exam experts are familiar with UNISA's examination format and requirements.</p>
+            </div>
+        </div>
+
+        <!-- Service Form -->
+        <div class="service-form">
+            <!-- Price Badge -->
+            <div class="price-badge">
+                <i class="fas fa-tag"></i> R600.00
+            </div>
+
+            <form action="{{ url_for('submit_exam') }}" method="POST" enctype="multipart/form-data">
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="required">Full Name</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-user"></i>
+                            <input type="text" name="name" placeholder="Enter your full name" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="required">Email Address</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" name="email" placeholder="yourname@mylife.unisa.ac.za" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="required">Contact Number</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-phone"></i>
+                            <input type="tel" name="contact" placeholder="+27 12 345 6789" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="required">University</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-university"></i>
+                            <input type="text" name="university" value="University of South Africa (UNISA)" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="required">Module Code & Name</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-book"></i>
+                            <input type="text" name="subject" placeholder="e.g., INF3708 - Advanced Databases" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="required">Exam Date</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                            <input type="date" name="exam_date" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="required">Exam Type</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-clipboard-list"></i>
+                        <select name="exam_type" required style="background-color: #0c1a3c;">
+                            <option value="">Select Exam Type</option>
+                            <option value="Midterm Exam">Midterm Exam</option>
+                            <option value="Final Exam">Final Exam</option>
+                            <option value="Supplementary Exam">Supplementary Exam</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="required">Topics / Areas to Focus On</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-bullseye"></i>
+                        <textarea name="topics" placeholder="List the specific topics, chapters, or areas you need help with... (Required)" required></textarea>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Upload Supporting Documents (Optional)</label>
+                    <div class="file-upload-container">
+                        <label class="file-upload-label" for="exam-file-upload">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <div class="file-upload-text">
+                                <p>Click to upload exam paper, study notes, or syllabus</p>
+                                <small>Supported formats: PDF, DOC, DOCX, JPG, PNG (Max 10MB)</small>
+                            </div>
+                        </label>
+                        <input type="file" name="file" id="exam-file-upload" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" onchange="updateFileName(this)">
+                    </div>
+                    <div id="file-name" style="margin-top: 10px; color: var(--unisa-gold); font-size: 0.9rem;"></div>
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-paper-plane"></i> Proceed to Secure Payment (R600.00)
+                </button>
+
+                <div style="text-align: center; margin-top: 20px; color: rgba(255, 255, 255, 0.6); font-size: 0.9rem;">
+                    <i class="fas fa-lock"></i> Secure payment processing • 24/7 support
+                </div>
+
+            </form>
+        </div>
+    </div>
+</section>
+
+<script>
+    // File upload display
+    function updateFileName(input) {
+        const fileNameDisplay = document.getElementById('file-name');
+        if (input.files.length > 0) {
+            const file = input.files[0];
+            const fileSize = (file.size / (1024 * 1024)).toFixed(2);
+            fileNameDisplay.innerHTML = `
+                <i class="fas fa-file"></i> Selected: ${file.name} (${fileSize} MB)
+            `;
+        } else {
+            fileNameDisplay.innerHTML = '';
+        }
+    }
+
+    // Date validation - cannot select past dates
+    const today = new Date().toISOString().split('T')[0];
+    const examDateInput = document.querySelector('input[name="exam_date"]');
+    examDateInput.setAttribute('min', today);
+
+    // Form validation
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const requiredFields = this.querySelectorAll('[required]');
+        let isValid = true;
+        
+        requiredFields.forEach(field => {
+            if (!field.value.trim()) {
+                isValid = false;
+                field.style.animation = 'shake 0.5s ease';
+                setTimeout(() => {
+                    field.style.animation = '';
+                }, 500);
+                
+                // Add error styling
+                field.style.borderColor = 'var(--unisa-red)';
+                field.style.boxShadow = '0 0 0 3px rgba(227, 27, 35, 0.2)';
+            }
+        });
+
+        // Validate exam date
+        const examDate = examDateInput.value;
+        if (examDate && new Date(examDate) < new Date(today)) {
+            isValid = false;
+            examDateInput.style.borderColor = 'var(--unisa-red)';
+            examDateInput.style.boxShadow = '0 0 0 3px rgba(227, 27, 35, 0.2)';
+            
+            // Show error message
+            const errorMsg = document.createElement('div');
+            errorMsg.className = 'alert alert-danger';
+            errorMsg.innerHTML = `
+                <i class="fas fa-exclamation-circle"></i>
+                Exam date cannot be in the past. Please select a future date.
+            `;
+            
+            const flashMessages = document.querySelector('.flash-messages');
+            if (flashMessages) {
+                flashMessages.appendChild(errorMsg);
+            }
+        }
+
+        if (!isValid) {
+            e.preventDefault();
+            
+            // Show general error message
+            const generalError = document.createElement('div');
+            generalError.className = 'alert alert-danger';
+            generalError.innerHTML = `
+                <i class="fas fa-exclamation-circle"></i>
+                Please complete all required fields correctly.
+            `;
+            
+            const flashMessages = document.querySelector('.flash-messages');
+            if (flashMessages) {
+                // Remove existing errors and add new one
+                const existingErrors = flashMessages.querySelectorAll('.alert-danger');
+                existingErrors.forEach(err => err.remove());
+                flashMessages.appendChild(generalError);
+            }
+            
+            // Scroll to error
+            generalError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    });
+
+    // Add shake animation
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+    `;
+    document.head.appendChild(style);
+
+    // Real-time form validation
+    const inputs = document.querySelectorAll('input, textarea, select');
+    inputs.forEach(input => {
+        input.addEventListener('blur', function() {
+            if (this.hasAttribute('required') && !this.value.trim()) {
+                this.style.borderColor = 'var(--unisa-red)';
+                this.style.boxShadow = '0 0 0 3px rgba(227, 27, 35, 0.2)';
+            } else {
+                this.style.borderColor = '';
+                this.style.boxShadow = '';
+            }
+        });
+
+        input.addEventListener('input', function() {
+            this.style.borderColor = '';
+            this.style.boxShadow = '';
+        });
+    });
+
+    // Auto-focus on first input
+    document.querySelector('input[name="name"]').focus();
+
+    // Update step indicator on form progress
+    const formSteps = document.querySelectorAll('.step');
+    const form = document.querySelector('form');
+    
+    form.addEventListener('input', function() {
+        let filledFields = 0;
+        const totalRequired = document.querySelectorAll('[required]').length;
+        
+        document.querySelectorAll('[required]').forEach(field => {
+            if (field.value.trim()) filledFields++;
+        });
+        
+        const progress = (filledFields / totalRequired) * 100;
+        
+        if (progress > 33 && progress < 66) {
+            formSteps[0].classList.add('completed');
+            formSteps[1].classList.add('active');
+        } else if (progress >= 66) {
+            formSteps[0].classList.add('completed');
+            formSteps[1].classList.add('completed');
+            formSteps[2].classList.add('active');
+        }
+    });
+
+    // File size validation
+    document.getElementById('exam-file-upload').addEventListener('change', function() {
+        if (this.files.length > 0) {
+            const file = this.files[0];
+            const fileSize = file.size / (1024 * 1024); // Convert to MB
+            
+            if (fileSize > 10) {
+                alert('File size exceeds 10MB limit. Please upload a smaller file.');
+                this.value = '';
+                document.getElementById('file-name').innerHTML = '';
+            }
+        }
+    });
+</script>
+
+</body>
+</html>
