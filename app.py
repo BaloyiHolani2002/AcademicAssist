@@ -14,35 +14,47 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
 from reportlab.lib import colors
 from reportlab.lib.units import inch
+import secrets
 
+# Initialize Flask app
 app = Flask(__name__)
 
-# Configure the app FIRST
+# ====================
+# RAILWAY CONFIGURATION
+# ====================
+
+# Generate a secure secret key for production
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', secrets.token_hex(32))
+
+# Database Configuration - Railway provides DATABASE_URL
+DATABASE_URL = os.environ.get('DATABASE_URL')
+
+# Fix PostgreSQL URL format for SQLAlchemy
+if DATABASE_URL and DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+
+# Use PostgreSQL on Railway, SQLite locally
+if DATABASE_URL:
+    app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
+else:
+    # Fallback to SQLite for local development
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(basedir, 'academic_assist.db')}"
+
+# Disable modification tracking for performance
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = 'your-secret-key-here'  # Required for session
 
 # File upload configuration
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
 app.config['ALLOWED_EXTENSIONS'] = {'pdf', 'png', 'jpg', 'jpeg', 'doc', 'docx', 'txt'}
 
-# Database Configuration - Use SQLite for local development
-DATABASE_URL = os.getenv("DATABASE_URL")
-
-if DATABASE_URL and DATABASE_URL.startswith("postgres://"):
-    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
-
-# Use PostgreSQL if DATABASE_URL is set, otherwise use SQLite locally
-if DATABASE_URL:
-    app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
-else:
-    # Use SQLite for local development - no PostgreSQL server needed
-    basedir = os.path.abspath(os.path.dirname(__file__))
-    app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(basedir, 'academic_assist.db')}"
-
-# Now create the SQLAlchemy instance AFTER app is configured
+# Initialize database
 db = SQLAlchemy(app)
 
+# ====================
+# DATABASE MODELS
+# ====================
 
 class Assignment(db.Model):
     __tablename__ = "assignments"
@@ -122,6 +134,9 @@ class Admin(db.Model):
     password = db.Column(db.String(255), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
+# ====================
+# HELPER FUNCTIONS
+# ====================
 
 def admin_login_required(f):
     @wraps(f)
@@ -138,7 +153,35 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
 
-# Add datetime filter to Jinja2
+# Create upload directories if they don't exist
+def create_upload_directories():
+    upload_dirs = [
+        "static/uploads/assignments",
+        "static/uploads/quizzes", 
+        "static/uploads/exams",
+        "static/uploads/payments"
+    ]
+    
+    for directory in upload_dirs:
+        os.makedirs(directory, exist_ok=True)
+        print(f"✓ Directory created/verified: {directory}")
+
+
+# Create default admin user
+def create_default_admin():
+    with app.app_context():
+        admin_exists = Admin.query.filter_by(username="admin").first()
+        if not admin_exists:
+            # Hash password for security (you should use werkzeug.security in production)
+            default_admin = Admin(username="admin", password="admin123")
+            db.session.add(default_admin)
+            db.session.commit()
+            print("Default admin created: username='admin', password='admin123'")
+
+# ====================
+# JINJA2 FILTERS
+# ====================
+
 @app.template_filter('datetime')
 def format_datetime(value, format='%Y-%m-%d %H:%M:%S'):
     if value is None:
@@ -171,6 +214,9 @@ def is_expired(due_date):
         due_date = datetime.strptime(due_date, '%Y-%m-%d').date()
     return due_date < date.today()
 
+# ====================
+# ROUTES
+# ====================
 
 @app.route("/")
 def home():
@@ -193,10 +239,9 @@ def download_file(service, filename):
     # Ensure the directory exists
     if not os.path.exists(folder):
         os.makedirs(folder, exist_ok=True)
-        abort(404)  # File still doesn't exist even after creating directory
+        abort(404)
     
     try:
-        # Sanitize the filename
         filename = secure_filename(filename)
         return send_from_directory(folder, filename, as_attachment=True)
     except FileNotFoundError:
@@ -208,14 +253,10 @@ def download_file(service, filename):
 def download_assignment_pdf(id):
     assignment = Assignment.query.get_or_404(id)
     
-    # Create a PDF in memory
     buffer = BytesIO()
     doc = SimpleDocTemplate(buffer, pagesize=letter)
-    
-    # Container for the 'Flowable' objects
     elements = []
     
-    # Styles
     styles = getSampleStyleSheet()
     title_style = ParagraphStyle(
         'CustomTitle',
@@ -281,10 +322,8 @@ def download_assignment_pdf(id):
     
     # Build PDF
     doc.build(elements)
-    
     buffer.seek(0)
     
-    # Create response
     response = make_response(buffer.getvalue())
     response.headers['Content-Type'] = 'application/pdf'
     response.headers['Content-Disposition'] = f'attachment; filename=assignment_{id}_details.pdf'
@@ -485,7 +524,7 @@ def download_all_pdf(service_type):
         'CustomTitle',
         parent=styles['Heading1'],
         fontSize=14,
-        alignment=1,  # Center alignment
+        alignment=1,
         spaceAfter=20
     )
     
@@ -576,7 +615,6 @@ def login():
         username = request.form["username"]
         password = request.form["password"]
         
-        # Use the Admin model instead of raw SQL
         admin = Admin.query.filter_by(username=username, password=password).first()
         
         if admin:
@@ -594,12 +632,9 @@ def login():
 @admin_login_required
 def dashboard():
     from datetime import date
-    import os
     
-    # Get today's date
     today = date.today()
     
-    # Get all records ordered by date
     assignments = Assignment.query.order_by(Assignment.due_date.desc()).all()
     quizzes = QuizRequest.query.order_by(QuizRequest.test_date.desc()).all()
     exams = ExamRequest.query.order_by(ExamRequest.exam_date.desc()).all()
@@ -919,19 +954,10 @@ def logout():
     flash("You have been logged out.", "info")
     return redirect(url_for("login"))
 
+# ====================
+# ERROR HANDLERS
+# ====================
 
-# Create admin user if doesn't exist
-def create_default_admin():
-    with app.app_context():
-        admin_exists = Admin.query.filter_by(username="admin").first()
-        if not admin_exists:
-            default_admin = Admin(username="admin", password="admin123")
-            db.session.add(default_admin)
-            db.session.commit()
-            print("Default admin created: username='admin', password='admin123'")
-
-
-# Error handlers
 @app.errorhandler(404)
 def not_found_error(error):
     return """
@@ -1006,26 +1032,37 @@ def internal_error(error):
     </html>
     """, 500
 
+# ====================
+# APPLICATION SETUP
+# ====================
 
-# Create database tables and default admin
+# Initialize database and create default admin on startup
 with app.app_context():
+    # Create all tables
     db.create_all()
-    create_default_admin()
+    
+    # Create default admin user
+    admin_exists = Admin.query.filter_by(username="admin").first()
+    if not admin_exists:
+        default_admin = Admin(username="admin", password="admin123")
+        db.session.add(default_admin)
+        db.session.commit()
+        print("✓ Default admin created: username='admin', password='admin123'")
+    
+    # Create upload directories
+    create_upload_directories()
+    
+    print("✓ Database tables created/verified")
+    print("✓ Application initialized successfully")
 
+# ====================
+# APPLICATION ENTRY POINT
+# ====================
 
+# This is important for Railway to detect the app
 if __name__ == "__main__":
-    # Create upload directories if they don't exist
-    upload_dirs = [
-        "static/uploads/assignments",
-        "static/uploads/quizzes", 
-        "static/uploads/exams",
-        "static/uploads/payments"
-    ]
+    # Get port from environment variable (Railway sets this)
+    port = int(os.environ.get("PORT", 8080))
     
-    for directory in upload_dirs:
-        os.makedirs(directory, exist_ok=True)
-        print(f"✓ Directory created/verified: {directory}")
-    
-  
-    
-    app.run(debug=True)
+    # Run the app
+    app.run(host="0.0.0.0", port=port, debug=False)
