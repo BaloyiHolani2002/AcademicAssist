@@ -1,5 +1,4 @@
-﻿Flask
-Flask-SQLAlchemy
+﻿flask
 gunicorn
+sqlalchemy
 psycopg2-binary
-reportlab
