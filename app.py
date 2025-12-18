@@ -17,6 +17,8 @@ from reportlab.lib.units import inch
 import secrets
 
 # Initialize Flask app
+from flask import Flask
+
 app = Flask(__name__)
 
 # ====================
